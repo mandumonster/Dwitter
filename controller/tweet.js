@@ -1,4 +1,5 @@
 import * as tweetRepository from '../data/tweet.js'
+import * as authRepository from '../data/auth.js'
 
 export async function getTweets(req,res){
     const username=req.query.username;
@@ -44,4 +45,22 @@ export async function deleteTweet(req,res,next){
     const id=req.params.id;
     tweetRepository.remove(id);
     res.sendStatus(204);
+}
+
+
+// auth
+export async function signup(req,res,next){
+    const {id,username,password,name,email,url}=req.body;
+    const user= await authRepository.create(id, username,password, name, email, url);
+    res.status(201).json(user);
+};
+
+export async function login(req,res,next){
+    const {id, password}=req.body;
+    const user=await authRepository.loglog(id,password);
+    if (user){
+        res.status(200).json(user);
+    }else{
+        res.status(404).json({message:`Tweet id(${id}) or password not found`});
+    }
 }
