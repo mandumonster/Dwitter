@@ -1,7 +1,8 @@
 import express from "express";
 import morgan from "morgan";
 import tweetsRouter from './router/tweets.js';
-import usersRouter from './router/auth.js';
+import authRouter from './router/auth.js';
+import {isAuth} from './middleware/auth.js';
 
 
 const app=express();
@@ -10,8 +11,8 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 // 라우터
-app.use('/tweets',tweetsRouter);
-app.use('/',usersRouter);
+app.use('/tweets',isAuth,tweetsRouter);
+app.use('/auth',authRouter);
 
 
 app.use((req,res,next)=>{
