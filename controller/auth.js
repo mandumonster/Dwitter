@@ -42,7 +42,7 @@ export async function login(req, res){
 
 
 function createJwtToken(id){
-    return jwt.sign({ id }, config.jwt.secretkey, { expiresIn : config.jwt.expiresInsec });
+    return jwt.sign({ id }, config.jwt.secretKey, { expiresIn : config.jwt.expriesInSec });
 }
 
 export async function me(req, res, next){
