@@ -1,16 +1,46 @@
-import { db } from '../DB/database.js';
+import SQ from 'sequelize';
+import { sequelize } from '../DB/database.js';
+const DataTypes=SQ.DataTypes;
+
+// 테이블이 없으면 사용, 있으면 기존 테이블 사용
+export const User=sequelize.define(
+    'user', // 자동으로 뒤에 s가 붙는다잉
+    {
+        id:{
+            type:DataTypes.INTEGER,
+            autoIncrement: true,
+            allowNull: false,
+            primaryKey:true
+        },
+        username:{
+            type:DataTypes.STRING(45),
+            allowNull:false
+        },
+        password:{
+            type:DataTypes.STRING(128),
+            allowNull:false
+        },
+        name:{
+            type:DataTypes.STRING(45),
+            allowNull:false
+        },
+        email:{
+            type:DataTypes.STRING(128),
+            allowNull:false
+        },
+        url: DataTypes.TEXT
+    },
+    {timestamps:false}
+);
 
 export async function findByUsername(username) {
-    return db.execute('SELECT * from users where username=?', [username])
-    .then((result) => result[0][0]);
+    return User.findOne({where:{username}});
 };
 
 export async function findById(id) {
-    return db.execute('SELECT * FROM users WHERE id=?', [id])
-    .then((result) => result[0][0])
+    return User.findByPk(id);
 };
 
 export async function createUser(user) {
-    const { username, password, name, email, url } = user;
-    return db.execute('INSERT INTO users (username, password, name, email, url) VALUES (?, ?, ?, ?, ?)', [username, password, name, email, url]).then((result) => result[0].insertId);
+    return User.create(user).then((data)=>data.dataValues.id);
 };
